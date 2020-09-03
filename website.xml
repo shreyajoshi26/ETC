@@ -1,0 +1,856 @@
+<odoo>
+
+    <template id="assets_frontend" inherit_id="website.assets_frontend">
+        <xpath expr="." position="inside">
+            <link rel="stylesheet" type="text/css"
+                  href="/ETC/static/src/css/style.css"/>
+            <script type="text/javascript" src="/ETC/static/src/js/main.js"/>
+        </xpath>
+    </template>
+
+    <!--Home Page Design-->
+    <template id='custom_home_page' name="Home">
+        <t t-call="website.layout">
+            <input type="hidden" t-att-value="request.env.uid" id="uid"/>
+            <div class="container">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+                <div id="myCarousel" class="carousel slide" data-ride="carousel">
+                    <!-- Indicators -->
+                    <ol class="carousel-indicators">
+                        <li data-target="#myCarousel" data-slide-to="0" class="active"/>
+                        <li data-target="#myCarousel" data-slide-to="1"/>
+                        <li data-target="#myCarousel" data-slide-to="2"/>
+                    </ol>
+
+                    <!-- Wrapper for slides -->
+                    <div class="carousel-inner">
+
+                        <div class="item active">
+                            <img src="ETC\static\src\image\img2X1.jpg" alt="TOLL BOOTH" style="width:100%; font-size: 20px;"/>
+                            <div class="carousel-caption">
+                                <p>Electronic toll collection (ETC) aims to eliminate the delay on toll roads,
+                                    toll bridges, and toll tunnels by collecting tolls
+                                    without cash and without requiring cars to stop.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="item">
+                            <img src="ETC\static\src\image\image3.jpg" alt="TOLL BOOTH" style="width:100%;"/>
+                            <div class="carousel-caption">
+                                <p>Electronic toll collection (ETC) aims to eliminate the delay on toll roads,
+                                    HOV lanes, toll bridges, and toll tunnels by collecting tolls
+                                    without cash and without requiring cars to stop
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="item">
+                            <img src="ETC\static\src\image\image4X1.jpg" alt="TOLL BOOTH" style="width:100%;"/>
+                            <div class="carousel-caption">
+                                <p>Electronic toll collection (ETC) aims to eliminate the delay on toll roads,
+                                    HOV lanes, toll bridges, and toll tunnels by collecting tolls
+                                    without cash and without requiring cars to stop
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Left and right controls -->
+                        <a class="left carousel-control" href="#myCarousel" data-slide="prev">
+                            <i class="fa fa-chevron-left"/>
+                        </a>
+                        <a class="right carousel-control" href="#myCarousel" data-slide="next">
+                            <i class="fa fa-chevron-right"/>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+    <!--&lt;!&ndash;Menu Bar design&ndash;&gt;-->
+    <template id='menu_page' name="Menu">
+        <t t-call="website.layout">
+            <input type="hidden" t-att-value="request.env.uid" id="uid"/>
+            <div class="stretch" id="menuDiv">
+            </div>
+        </t>
+    </template>
+    <!--Toll charges-->
+    <template id='toll_charges_page' name="Toll Charges">
+        <t t-call="website.layout">
+            <div class="container">
+                <input type="hidden" t-att-value="request.env.uid" id="uid"/>
+                <div class="row" style="margin-top:3% !important">
+                    <div id="custom-search-input">
+                        <div class="input-group col-md-10 col-md-offset-1">
+                            <form action="/search_data" method="POST">
+                                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                                <input type="text" class="search-query form-control" placeholder="Search here...."
+                                       name="search_val" t-att-value="search_val"/>
+                                <span class="input-group-btn">
+                                    <button class="btn btn-danger" type="submit">
+                                        <i class="fa fa-search"/>
+                                    </button>
+                                </span>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="container">
+                <div class="col-md-12" style="margin-top:3% !important">
+                    <t t-foreach="toll_info" t-as="toll">
+                        <div class="panel-group">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h4 class="panel-title">
+                                        <a data-toggle="collapse" t-attf-href="#collapse#{toll.id}">
+                                            <div>
+                                                <t t-esc="toll.location_id.location_1"/>
+                                                <t t-esc="toll.location_id.location_2"/>
+                                            </div>
+                                            <i class="fa fa-caret-down"
+                                               style="position: relative;top: -18px;float:right;"/>
+                                        </a>
+                                    </h4>
+                                </div>
+                                <div t-attf-id="collapse#{toll.id}" class="panel-collapse collapse">
+                                    <div class="panel-body">
+                                        <t t-foreach="toll.toll_ids" t-as="tl">
+                                            <div class="col-md-12">
+                                                <div class="col-md-6">
+                                                    <t t-esc="tl.name"/>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <t t-esc="tl.type"/>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <t class="decimal_precision"
+                                                       t-att-data-precision="str(tl.currency_id.decimal_places)">
+                                                        <span t-esc="tl.amount"
+                                                              t-options='{"widget":"monetary", "display_currency" : tl.currency_id,}'/>
+                                                    </t>
+                                                </div>
+                                            </div>
+                                        </t>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </div>
+            </div>
+        </t>
+    </template>
+    <!--search data page-->
+    <template id='toll_search_data_page' name="Toll Charges">
+        <t t-call="website.layout">
+            <div class="input-group col-md-10 col-md-offset-1" style="margin-top:23px !important;">
+                <form action="/search_data" method="POST">
+                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                    <input type="text" class="search-query form-control" placeholder="Search here...."
+                           name="search_val" t-att-value="search_val"/>
+                    <span class="input-group-btn" style="left:1085px !important;">
+                        <button class="btn btn-danger" type="submit">
+                            <i class="fa fa-search"/>
+                        </button>
+                    </span>
+                </form>
+            </div>
+            <input type="hidden" t-att-value="request.env.uid" id="uid"/>
+            <div class="container">
+                <a href="/tollcharges"><i class="long-arrow-alt-left"/>Go Back
+                </a>
+            </div>
+            <div class="container">
+                <div class="col-md-12" style="margin-top:3% !important">
+                    <t t-foreach="toll_info" t-as="toll">
+                        <div class="panel-group">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h4 class="panel-title">
+                                        <a data-toggle="collapse" t-attf-href="#collapse#{toll.id}">
+                                            <div>
+                                                <t t-esc="toll.location_id.location_1"/>
+                                                <t t-esc="toll.location_id.location_2"/>
+                                            </div>
+                                            <i class="fa fa-caret-down"
+                                               style="position: relative;top: -18px;float:right;"/>
+                                        </a>
+                                    </h4>
+                                </div>
+                                <div t-attf-id="collapse#{toll.id}" class="panel-collapse collapse">
+                                    <div class="panel-body">
+                                        <t t-foreach="toll.toll_ids" t-as="tl">
+                                            <div class="col-md-12">
+                                                <div class="col-md-6">
+                                                    <t t-esc="tl.name"/>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <t t-esc="tl.type"/>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <t class="decimal_precision"
+                                                       t-att-data-precision="str(tl.currency_id.decimal_places)">
+                                                        <span t-esc="tl.amount"
+                                                              t-options='{"widget":"monetary", "display_currency" : tl.currency_id,}'/>
+                                                    </t>
+                                                </div>
+                                            </div>
+                                        </t>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </div>
+            </div>
+        </t>
+    </template>
+    <!--FAQs page design-->
+    <template id='FAQs_page' name="FAQs">
+        <t t-call="website.layout">
+            <input type="hidden" t-att-value="request.env.uid" id="uid"/>
+            <h1>
+                <center>Frequently Asked Questions</center>
+            </h1>
+            <div class="container" id="FAQsDiv" style="margin-top:8% !important;">
+                <!--question 1-->
+                <div class="panel-group">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                                <div>What is ETC?</div>
+                                <a data-toggle="collapse" href="#collapse1" style="float:right;">
+                                    <i class="fa fa-caret-down" style="position: relative;top: -18px;"/>
+                                </a>
+                            </h4>
+                        </div>
+                        <div id="collapse1" class="panel-collapse collapse">
+                            <div class="panel-body">
+                                ETC is a program for Electronic Toll Collection on Toll Plazas on Highways.
+                                ETC employs Radio Frequency Identification (RFID) technology for
+                                making toll payments directly from the prepaid account linked to it.
+                                It is affixed on the windscreen of your vehicle and enables you to drive
+                                through toll plazas
+                                ETC offers near non-stop movement of vehicles through toll plazas
+                                and the convenience of cashless payment of toll fee with nation-wide
+                                interoperable Electronic Toll Collection Services.
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <!--question 2-->
+                <div class="panel-group">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                                <div>Is ETC compulsory and is ETC for any particular kind/category of vehicle?</div>
+                                <a data-toggle="collapse" href="#collapse2" style="float:right;">
+                                    <i class="fa fa-caret-down" style="position: relative;top: -18px;"/>
+                                </a>
+                            </h4>
+                        </div>
+                        <div id="collapse2" class="panel-collapse collapse">
+                            <div class="panel-body">No, ETC is not compulsory.
+                                It is voluntary at this stage of the program.
+                                However, it may be made mandatory in future at some locations.
+                                ETC is applicable for all categories, kinds, makes and types of vehicles.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--question 3-->
+                <div class="panel-group">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                                <div>How will I get to know if and how much toll has been debited?</div>
+                                <a data-toggle="collapse" href="#collapse3" style="float:right;">
+                                    <i class="fa fa-caret-down" style="position: relative;top: -18px;"/>
+                                </a>
+                            </h4>
+                        </div>
+                        <div id="collapse3" class="panel-collapse collapse">
+                            <div class="panel-body">
+                                The customer will receive an SMS with requisite details to his registered mobile number
+                                as soon as the toll transaction takes place.
+                                Periodic statement of account may also be obtained on website of the
+                                Issuer Agency after registration by the customer.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--question 4-->
+                <div class="panel-group">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                                <div>How and where do I finally pay the toll?</div>
+                                <a data-toggle="collapse" href="#collapse4" style="float:right;">
+                                    <i class="fa fa-caret-down" style="position: relative;top: -18px;"/>
+                                </a>
+                            </h4>
+                        </div>
+                        <div id="collapse4" class="panel-collapse collapse">
+                            <div class="panel-body">
+                                Issuer Agency will electronically deduct the applicable toll fee from the customer’s
+                                account linked to the ETC.
+                                This deduction will be done post the toll transaction.
+                                The customer needs to adequately fund the account which is linked to ETC.
+                                This recharge process may be termed as top-up.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--question 5-->
+                <div class="panel-group">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                                <div>Can one vehicle use more than one ETC?</div>
+                                <a data-toggle="collapse" href="#collapse5" style="float:right;">
+                                    <i class="fa fa-caret-down" style="position: relative;top: -18px;"/>
+                                </a>
+                            </h4>
+                        </div>
+                        <div id="collapse5" class="panel-collapse collapse">
+                            <div class="panel-body">
+                                It is strictly prohibited to purchase
+                                two ETC for one vehicle. In case of multiple ETC,
+                                customer will be responsible for operational issues.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--question 6-->
+                <div class="panel-group">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                                <div>How would I cross toll plaza, if ETC equipment are not working?</div>
+                                <a data-toggle="collapse" href="#collapse4" style="float:right;">
+                                    <i class="fa fa-caret-down" style="position: relative;top: -18px;"/>
+                                </a>
+                            </h4>
+                        </div>
+                        <div id="collapse6" class="panel-collapse collapse">
+                            <div class="panel-body">
+                                In case ETC equipment are not working and your ETC account is having sufficient balance,
+                                please pay the toll fee in cash at the plaza. Additionally, please call our customer
+                                care
+                                and also
+                                report the issue with the concessionaire.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!--question 7-->
+                <div class="panel-group">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                                <div>How can I buy RFID Tag and what documents and recharge are required?</div>
+                                <a data-toggle="collapse" href="#collapse4" style="float:right;">
+                                    <i class="fa fa-caret-down" style="position: relative;top: -18px;"/>
+                                </a>
+                            </h4>
+                        </div>
+                        <div id="collapse7" class="panel-collapse collapse">
+                            <div class="panel-body">
+                                Customer need to submit a copy of the following documents along with the application for
+                                RFID Tag:
+                                1.Registration Certificate (RC) of the vehicle.
+                                2.Passport size photograph of the vehicle owner
+                                3.KYC documents as per the category of the vehicle owner (viz. individual /
+                                corporate):Individual
+
+                                ID proof and Address proof from the list mentioned, and 1 passport size photograph
+                                1.Driving License,
+                                2.PAN Card Passport,
+                                3.Voter ID Card,
+                                4.Aadhar Card (with address)
+                                <b>For instance, valid driving license would be sufficient for Address and ID proof.</b>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!--question 8-->
+                <div class="panel-group">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                                <div>What are the benefits of using RFID Tag?</div>
+                                <a data-toggle="collapse" href="#collapse4" style="float:right;">
+                                    <i class="fa fa-caret-down" style="position: relative;top: -18px;"/>
+                                </a>
+                            </h4>
+                        </div>
+                        <div id="collapse8" class="panel-collapse collapse">
+                            <div class="panel-body">
+                                1.Ease of payment – No need to carry cash for the toll transactions, saves time
+                                2.Near non-stop movement of vehicles leading to lower fuel cost.
+                                3.Reduced toll payment hassles
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    Note:
+                    <ol type="I">
+                        <li>Issue of RFID Tag is subject to verification of original documents mentioned above by the
+                            issuing
+                            agency.
+                        </li>
+                        <li>Customers are advised to bring originals of above documents while visiting PoS for purchase
+                            of
+                            Tag.
+                        </li>
+                        <li>The RFIDTag will be fixed on the vehicle’s windshield by the representative of the Issuer
+                            Agency only.
+                        </li>
+
+                        <li>Any representative of the vehicle owner can provide the above documentation and information
+                            and
+                            purchase the Tag.
+                        </li>
+                    </ol>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <!--Feedback Page design-->
+    <template id='feedback_page' name="Feedback">
+        <t t-call="website.layout">
+            <input type="hidden" t-att-value="request.env.uid" id="uid"/>
+            <div class="container">
+                <div class="container">
+                    <form method="POST" action="/feedback">
+                        <div class="form-group">
+                            <h2>Feedback</h2>
+                            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                            <textarea class="form-control" rows="10" id="comment" name="comment"
+                                      placeholder="Enter your feedback.."/>
+                            <button type="submit" class="btn btn-info" style="margin-top:10px;">Add Feedback</button>
+                        </div>
+                    </form>
+                </div>
+                <div class="container">
+                    <t t-set="feedbacks" t-value="request.env['toll.feedback'].sudo().search([])"/>
+                    <div class="commentBox">
+                        <div class="actionBox">
+                            <ul class="commentList">
+                                <t t-foreach="feedbacks" t-as="feedback">
+                                    <li>
+                                        <div class="commenterImage">
+                                            <img t-att-src="'/web/image?model=res.users&amp;field=image&amp;id='+str(feedback.user_id.id)"/>
+                                        </div>
+                                        <t t-if="feedback.user_id.id == request.env.user.id">
+                                            <a class="remove_feedback" t-attf-id="#{feedback.id}">
+                                                <span style="float:right !important;font-size:18px;">
+                                                    <i class="fa fa-trash"/>
+                                                </span>
+                                            </a>
+                                        </t>
+                                        <div class="commentText">
+                                            <p>
+                                                <b>
+                                                    <span t-esc="feedback.user_id.name"/>
+                                                </b>
+                                            </p>
+                                            <p>
+                                                <span t-esc="feedback.feedback"/>
+                                            </p>
+                                            <span class="date sub-text">
+                                                <span t-esc="feedback.create_date"/>
+                                            </span>
+                                        </div>
+                                    </li>
+                                </t>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <template id='scan_page' name="Scan">
+        <t t-call="website.layout">
+            <div>
+                <input type="hidden" t-att-value="request.env.uid" id="uid"/>
+                <form class="oe_signup_form" role="form" method="post" t-if="not message">
+                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                    <div class="form-group">
+                        <label for="fname" class="control-label">First Name *</label>
+                        <input type="text" name="name" t-att-value="fname" id="fname" class="form-control"
+                               required="required" t-att-readonly="'readonly' if only_passwords else None"
+                        />
+                    </div>
+                </form>
+            </div>
+        </t>
+    </template>
+
+    <!--About Us Page design-->
+    <template id='about_us_page' name="About Us">
+        <t t-call="website.layout">
+            <input type="hidden" t-att-value="request.env.uid" id="uid"/>
+            <div class="container" style="font-size:18px;">
+                <div>
+                    <h1>
+                        <center>About Us</center>
+                    </h1>
+
+                </div>
+                <img src="/ETC/static/src/image/xyz1.png" alt="TOLL BOOTH"
+                     style="width: 100%;height: 50%;background-position: center; background-size: cover;"/>
+                <div>
+                    <ul class="list-group" style="font-size:16px ">
+
+                        <li class="list-group-item">
+                            ETC is a simple to use, reloadable tag which enables automatic deduction of toll charges and
+                            lets you pass through
+                            the toll plaza without stopping for the cash transaction.
+                        </li>
+                        <li class="list-group-item">
+                            ETC is linked to a prepaid account from which the applicable
+                            toll amount is deducted.
+                        </li>
+                        <li class="list-group-item">
+                            The tag employs Radio-frequency Identification (RFID) technology and is affixed on the
+                            vehicle's windscreen
+                            after the tag account is active.
+                        </li>
+                        <li class="list-group-item">
+                            ETC is a device that employs Radio Frequency Identification (RFID) technology for making
+                            toll
+                            payments directly from the prepaid account linked to it.
+                            It is affixed on the windscreen of your vehicle and enables you to drive through toll
+                            plazas.
+                        </li>
+                        <li class="list-group-item">
+                            ETC offers near non-stop movement of vehicles through toll plazas and the convenience of
+                            cashless payment
+                            of toll fee with nation-wide interoperable Electronic Toll Collection Services.
+                        </li>
+                        <li class="list-group-item">Ease of payment – No need to carry cash for the toll transactions,
+                            saves
+                            time
+                        </li>
+                        <li class="list-group-item">Near non-stop movement of vehicles leading to lower fuel cost.</li>
+                        <li class="list-group-item">Online Recharge – FASTag can be recharged online through Credit Card
+                            /
+                            Debit Card / NEFT/ RTGS or Net banking
+                        </li>
+                        <li class="list-group-item">SMS alerts for toll transactions, low balance, etc.</li>
+                        <li class="list-group-item">Online Portal for customers</li>
+                        <li class="list-group-item">Reduced air pollution</li>
+                        <li class="list-group-item">Reduced use of paper</li>
+                        <li class="list-group-item">Reduced toll payment hassles</li>
+                        <li class="list-group-item">Analytics for better highway management</li>
+                        <li class="list-group-item">Reduced effort in management at toll plaza</li>
+                        <li class="list-group-item">Reduced effort in monitoring centrally</li>
+                    </ul>
+                </div>
+            </div>
+        </t>
+    </template>
+    <!--Sign in form-->
+    <template id="auth_signup.fields" name="Auth Signup/ResetPassword form fields">
+        <h5>
+            <font color="red">All the fileds indicating * are compulsary</font>
+        </h5>
+
+        <div class="form-group field-address">
+            <label for="fname" class="control-label">First Name *</label>
+            <input type="text" name="name" t-att-value="fname" id="fname" class="form-control"
+                   required="required" t-att-readonly="'readonly' if only_passwords else None"
+            />
+        </div>
+
+        <div class="form-group field-address">
+            <label for="lname" class="control-label">Last Name *</label>
+            <input type="text" name="lname" t-att-value="lname" id="lname" class="form-control"
+                   required="required" t-att-readonly="'readonly' if only_passwords else None"
+            />
+        </div>
+
+        <div class="form-group field-email">
+            <label for="email" class="control-label">Your Email *</label>
+            <input type="text" name="login" t-att-value="login" id="login" class="form-control" autofocus="autofocus"
+                   autocapitalize="off" required="required" t-att-readonly="'readonly' if only_passwords else None"/>
+        </div>
+        <div class="form-group field-address">
+            <label for="address" class="control-label">Address *</label>
+            <input type="text" name="address" t-att-value="address" id="address" class="form-control"
+                   required="required" t-att-readonly="'readonly' if only_passwords else None"
+            />
+        </div>
+
+        <div class="form-group field-address">
+            <label for="city" class="control-label">City *</label>
+            <input type="text" name="city" t-att-value="city" id="city" class="form-control"
+                   required="required" t-att-readonly="'readonly' if only_passwords else None"
+            />
+        </div>
+
+        <div class="form-group field-state">
+            <label for="state" class="control-label">State *</label>
+            <select name="state" id="state" class="form-control">
+                <option value="Andra Pradesh">Andra Pradesh</option>
+                <option value="">Andaman and Nicobar</option>
+                <option value="Arunachal Pradesh">Arunachal Pradesh</option>
+                <option value="Assam">Assam</option>
+                <option value="Bihar">Bihar</option>
+                <option value="Chandigarh">Chandigarh</option>
+                <option value="Chhatisgharh">Chhatisgharh</option>
+                <option value="Delhi">Delhi</option>
+                <option value="Dadar and Nagar Haveli">Dadar and Nagar Haveli</option>
+                <option value="Daman and Diu">Daman and Diu</option>
+                <option value="Goa">Goa</option>
+                <option value="Gujrat" selected="G">Gujrat</option>
+                <option value="Haryana">Haryana</option>
+                <option value="Himachal Pradesh">Himachal Pradesh</option>
+                <option value="Jammu and Kashmir">Jammu and Kashmir</option>
+                <option value="Jharkhand">Jharkhand</option>
+                <option value="Karnataka">Karnataka</option>
+                <option value="Kerala">Kerala</option>
+                <option value="Lakshadeep">Lakshadeep</option>
+                <option value="Madhya Pradesh">Madhya Pradesh</option>
+                <option value="Maharashtra">Maharashtra</option>
+                <option value="Manipur">Manipur</option>
+                <option value="Meghalaya">Meghalaya</option>
+                <option value="Mizoram">Mizoram</option>
+                <option value="Nagaland">Nagaland</option>
+                <option value="Orissa">Orissa</option>
+                <option value="Punjab">Punjab</option>
+                <option value="Pondicherry">Pondicherry</option>
+                <option value="Rajasthan">Rajasthan</option>
+                <option value="Sikkim">Sikkim</option>
+                <option value="Tamil Nadu">Tamil Nadu</option>
+                <option value="Tripura">Tripura</option>
+                <option value="Uttaranchal">Uttaranchal</option>
+                <option value="Uttar Pradesh">Uttar Pradesh</option>
+            </select>
+        </div>
+
+        <div class="form-group field-rfid_no">
+            <label for="dob" class="control-label">Enter Date of birth *</label>
+            <input type="text" name="dob" t-att-value="dob" id="dob" class="form-control"
+                   required="required" t-att-readonly="'readonly' if only_passwords else None"
+                   t-att-autofocus="'autofocus' if rfid_no and not only_passwords else None"/>
+        </div>
+
+        <div class="form-group field-gender">
+            <label for="gender" class="control-label">Gender *</label>
+            <select name="gender" id="gender" class="form-control">
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+            </select>
+        </div>
+
+        <div class="form-group field-contact_no">
+            <label for="contact_no" class="control-label">Contact No. *</label>
+            <input type="number" name="contact_no" t-att-value="contact_no" id="contact_no" class="form-control"
+                   required="required" t-att-readonly="'readonly' if only_passwords else None"/>
+        </div>
+
+        <div class="form-group field-rfid_no">
+            <label for="rfid_no" class="control-label">RFID No. *</label>
+            <input type="text" name="rfid_no" t-att-value="rfid_no" id="rfid_no" class="form-control"
+                   required="required" t-att-readonly="'readonly' if only_passwords else None"
+                   t-att-autofocus="'autofocus' if rfid_no and not only_passwords else None"/>
+        </div>
+
+        <div class="form-group field-vehicle_no">
+            <label for="vehicle_no" class="control-label">Vehicle No *</label>
+            <input type="text" name="vehicle_no" t-att-value="vehicle_no" id="vehicle_no" class="form-control"
+                   required="required" t-att-readonly="'readonly' if only_passwords else None"
+                   t-att-autofocus="'autofocus' if vehicle_no and not only_passwords else None"/>
+        </div>
+        <div class="form-group field-vehicle_type">
+            <label for="vehicle_type" class="control-label">Vehicle Type *</label>
+            <select name="vehicle_type" id="vehicle_type" class="form-control">
+                <option value="C/J/V">Car/Jeep/Van</option>
+                <option value="LCV">light commercial vehicle</option>
+                <option value="bus/truck">bus/truck</option>
+                <option value="EM/HCM">Earth moving/heavy construction machinary</option>
+                <option value="TRCT">tractor</option>
+                <option value="MLCV">mini light commercial vehicle</option>
+            </select>
+        </div>
+        <div class="form-group field-password">
+            <label for="password" class="control-label">Password *</label>
+            <label>Must contain at least one number and one uppercase and lowercase letter, and at least 8 or more
+                characters
+            </label>
+            <input type="password" name="password" id="password" class="form-control"
+                   required="required" t-att-autofocus="'autofocus' if only_passwords else None"/>
+        </div>
+        <div class="form-group field-confirm_password">
+            <label for="confirm_password" class="control-label">Confirm Password *</label>
+            <input type="password" name="confirm_password" id="confirm_password" class="form-control"
+                   required="required"/>
+        </div>
+
+    </template>
+
+    <template id="auth_signup.signup" name="Sign up login">
+        <t t-call="web.login_layout">
+            <div class="background">
+
+
+                <form class="oe_signup_form" role="form" method="post" t-if="not message">
+                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                    <t t-call="auth_signup.fields">
+                        <t t-set="only_passwords" t-value="bool(token)"/>
+                    </t>
+                    <p class="alert alert-danger" t-if="error">
+                        <t t-esc="error"/>
+                    </p>
+                    <input type="hidden" name="redirect" t-att-value="redirect"/>
+                    <input type="hidden" name="token" t-att-value="token"/>
+                    <div class="clearfix oe_login_buttons">
+                        <a t-attf-href="/web/login?{{ keep_query() }}" class="btn btn-link pull-right">Back to Login</a>
+                        <button type="submit" class="btn btn-primary pull-left">Sign up</button>
+                    </div>
+                </form>
+            </div>
+        </t>
+    </template>
+
+    <template inherit_id="website_sale.cart" id="my_custom_cart">
+        <xpath expr="//h1[@class='mb32']" position="replace">
+            <h1 class="mb32">Payment Details</h1>
+        </xpath>
+        <xpath expr="//div[@id='right_column']" position="replace">
+        </xpath>
+        <xpath expr="//a[@t-if='not optional_products and website_sale_order and website_sale_order.website_order_line']"
+               position="replace">
+            <a t-if="not optional_products and website_sale_order and website_sale_order.website_order_line"
+               class="btn btn-primary pull-right mb32" href="/shop/payment">
+                <span class="hidden-xs">Process Checkout</span>
+                <span class="visible-xs-inline">Checkout</span>
+                <span class="fa fa-long-arrow-right"/>
+            </a>
+        </xpath>
+    </template>
+
+    <template inherit_id="website_sale.cart_lines" id="my_custom_cart_lines">
+        <xpath expr="//td[@id='td-qty']" position="replace">
+        </xpath>
+        <xpath expr="//thead//th[@width='130']" position="replace">
+        </xpath>
+    </template>
+
+    <template id="custom_header" inherit_id="website_sale.header">
+        <xpath expr="//a[@href='/shop/cart']" position="replace">
+            <a href="/shop/cart">
+                Payment Details
+                <!--<sup t-attf-class="my_cart_quantity label label-primary"-->
+                     <!--t-esc="website_sale_order and website_sale_order.cart_quantity or ''"/>-->
+            </a>
+        </xpath>
+    </template>
+
+    <template inherit_id="website_sale.checkout" id="custom_chekout">
+        <xpath expr="//div[@class='row']/div[@class='col-md-8 oe_cart']/div[@class='row']" position="replace">
+            <div>
+                Please Confirm ..
+            </div>
+        </xpath>
+        <xpath expr="//t[@t-if='not only_services']" position="replace">
+        </xpath>
+        <xpath expr="//a[@href='/shop/cart']" position="replace">
+            <a href="/shop/cart" class="btn btn-default mb32">
+                <span class="fa fa-long-arrow-left"/>
+                Back
+            </a>
+        </xpath>
+    </template>
+
+    <template inherit_id="website_sale.payment" id="custom_payment">
+        <xpath expr="//thead//th[@width='120']" position="replace">
+        </xpath>
+        <xpath expr="//tbody//td[4]" position="replace">
+        </xpath>
+        <xpath expr="//div[@id='right_column']" position="replace">
+        </xpath>
+    </template>
+
+    <template inherit_id="website_sale.confirmation" id="custom_confirmation">
+        <xpath expr="//div[@class='oe_cart']//th[2]" position="replace">
+        </xpath>
+        <xpath expr="//tbody//td[2]" position="replace">
+        </xpath>
+        <xpath expr="//div[@class='col-lg-3 col-lg-offset-1 col-sm-3 text-muted']" position="replace">
+        </xpath>
+        <xpath expr="//tfooter" position="replace">
+            <tfooter>
+                <tr>
+                    <td colspan="1"></td>
+                    <td class="text-right">Subtotal:</td>
+                    <td class="text-right">
+                        <span t-field="order.amount_untaxed" style="white-space: nowrap;"
+                              t-options="{'widget': 'monetary','from_currency': order.pricelist_id.currency_id,'display_currency': website.currency_id}"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td class='noborder' colspan="1"></td>
+                    <td class="text-right noborder">Taxes:</td>
+                    <td class="text-right noborder">
+                        <span t-field="order.amount_tax" style="white-space: nowrap;"
+                              t-options="{'widget': 'monetary', 'from_currency': order.pricelist_id.currency_id, 'display_currency': website.currency_id}"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td class='noborder' colspan="1"></td>
+                    <td class="text-right">
+                        <strong>Total:</strong>
+                    </td>
+                    <td class="text-right">
+                        <strong t-field="order.amount_total"
+                                t-options='{"widget": "monetary", "display_currency": order.pricelist_id.currency_id}'/>
+                    </td>
+                </tr>
+            </tfooter>
+        </xpath>
+    </template>
+
+    <template inherit_id="sale.report_saleorder_document" id="sale_order_report">
+        <xpath expr="//div[@class='page']//div[@class='row']//div[@class='col-xs-6']" position="replace">
+        </xpath>
+        <xpath expr="//div[@class='col-xs-5 col-xs-offset-1']" position="replace">
+            <div class="col-xs-5 col-xs-offset-1">
+                <div t-field="doc.partner_id"
+                     t-options='{"widget": "contact", "fields": ["name"], "no_marker": True}'/>
+            </div>
+        </xpath>
+        <xpath expr="//thead//th[2]" position="replace">
+        </xpath>
+        <xpath expr="//t[@t-as='l']//td[2]" position="replace">
+        </xpath>
+    </template>
+
+    <template inherit_id="website_sale.wizard_checkout" id="custom_checkout_wizard">
+        <xpath expr="//li[@id='step20']" position="replace">
+        </xpath>
+        <xpath expr="//li[@id='step10']" position="replace">
+            <li t-att-class="step==10 and 'text-primary' or 'text-muted'" id="step10">
+                <t t-if="step&gt;10 and step&lt;50">
+                    <a href="/shop/cart" class="text-success">
+                        Review Details<span class="chevron"></span>
+                    </a>
+                </t>
+                <t t-if="not (step&gt;10 and step&lt;50)">
+                    Review Details<span class="chevron"></span>
+                </t>
+            </li>
+        </xpath>
+    </template>
+</odoo>

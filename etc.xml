@@ -1,0 +1,271 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+        <record id="payment_details_form" model="ir.ui.view">
+            <field name="name">payment.form</field>
+            <field name="model">payment</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <field name="user_id"/>
+                            <field name="branch_id"/>
+                            <field name="contact_no"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record id="payment_details_tree" model="ir.ui.view">
+            <field name="name">payment.tree</field>
+            <field name="model">payment</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="user_id"/>
+                    <field name="branch_id"/>
+                    <field name="contact_no"/>
+                </tree>
+            </field>
+        </record>
+        <record id="action_payment_details" model="ir.actions.act_window">
+            <field name="name">Payment</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">payment</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <record id="toll_authority_form" model="ir.ui.view">
+            <field name="name">tollauthority.form</field>
+            <field name="model">toll.authority</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <field name="user_id"/>
+                            <field name="toll_amount"/>
+                            <field name="rfid_no"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record id="toll_authority_tree" model="ir.ui.view">
+            <field name="name">tollauthority.tree</field>
+            <field name="model">toll.authority</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="user_id"/>
+                    <field name="toll_amount"/>
+                    <field name="rfid_no"/>
+                </tree>
+            </field>
+        </record>
+        <record id="action_toll_authority" model="ir.actions.act_window">
+            <field name="name">Toll authority</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">toll.authority</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+
+        <record id="toll_location_form" model="ir.ui.view">
+            <field name="name">tolllocation.form</field>
+            <field name="model">toll.location</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <field name="location_1"/>
+                            <field name="location_2"/>
+
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record id="toll_location_tree" model="ir.ui.view">
+            <field name="name">tolllocation.tree</field>
+            <field name="model">toll.location</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="location_1"/>
+                    <field name="location_2"/>
+
+                </tree>
+            </field>
+        </record>
+        <record id="toll_location_action" model="ir.actions.act_window">
+            <field name="name">Toll location</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">toll.location</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+
+        <record id="toll_information_form" model="ir.ui.view">
+            <field name="name">tollinformation.form</field>
+            <field name="model">toll.information</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <field name="location_id"/>
+                        </group>
+                        <notebook>
+                            <page string="Toll Amount">
+                                <field name="toll_ids" mode="tree">
+                                    <tree>
+                                        <field name="name"/>
+                                        <field name="type"/>
+                                        <field name="currency_id"/>
+                                        <field name="amount"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="toll_amount_form" model="ir.ui.view">
+            <field name="name">tollamount.form</field>
+            <field name="model">toll.amount</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                            <field name="type"/>
+                            <field name="currency_id"/>
+                            <field name="amount"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="toll_information_tree" model="ir.ui.view">
+            <field name="name">tollinformation.tree</field>
+            <field name="model">toll.information</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="location_id"/>
+                </tree>
+            </field>
+        </record>
+        <record id="toll_information_action" model="ir.actions.act_window">
+            <field name="name">Toll Information</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">toll.information</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <record id="res_user_inherit_form" model="ir.ui.view">
+            <field name="name">res.users.form</field>
+            <field name="model">res.users</field>
+            <field name="inherit_id" ref="base.view_users_form"/>
+            <field name="arch" type="xml">
+                <field name="partner_id" position="after">
+                    <field name="rfid_no"/>
+                    <field name="vehicle_no"/>
+                    <field name="vehicle_type"/>
+                </field>
+            </field>
+        </record>
+
+        <record id="feedback_form" model="ir.ui.view">
+            <field name="name">feedback.form</field>
+            <field name="model">toll.feedback</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <field name="user_id"/>
+                            <field name="feedback"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record id="feedback_tree" model="ir.ui.view">
+            <field name="name">feedback.tree</field>
+            <field name="model">toll.feedback</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="user_id"/>
+                    <field name="feedback"/>
+                </tree>
+            </field>
+        </record>
+        <record id="action_feedback" model="ir.actions.act_window">
+            <field name="name">feedback</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">toll.feedback</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <record id="website_inherit" model="ir.ui.view">
+            <field name="name">website.config</field>
+            <field name="model">website.config.settings</field>
+            <field name="inherit_id" ref="website.view_website_config_settings"/>
+            <field name="arch" type="xml">
+                <group name="optimization" position="after">
+                    <group string="ETC">
+                        <field name="raspi_ip"/>
+                    </group>
+                </group>
+            </field>
+        </record>
+
+        <menuitem id="menu_etc_main_item" name="Electronic Toll Collection"/>
+        <menuitem id="sub_menu_toll_information" name="ETC"
+                  parent="menu_etc_main_item" sequence="1"/>
+
+        <menuitem action="toll_location_action" id="menu_toll_location"
+                  parent="sub_menu_toll_information" sequence="1"/>
+
+        <menuitem action="toll_information_action" id="menu_toll_information"
+                  parent="sub_menu_toll_information" sequence="2"/>
+
+        <menuitem action="action_toll_authority" id="menu_toll_authority"
+                  parent="sub_menu_toll_information" sequence="3"/>
+
+        <menuitem action="action_payment_details" id="menu_payment"
+                  parent="sub_menu_toll_information" sequence="4"/>
+
+        <menuitem action="action_feedback" id="toll_menu_feedback"
+                  parent="sub_menu_toll_information" sequence="5"/>
+
+        <record id="menu_about_us" model="website.menu">
+            <field name="name">About Us</field>
+            <field name="url">/aboutus</field>
+            <field name="parent_id" ref="website.main_menu"/>
+        </record>
+        <record id="menu_toll_charges" model="website.menu">
+            <field name="name">Toll Charges</field>
+            <field name="url">/tollcharges</field>
+            <field name="parent_id" ref="website.main_menu"/>
+        </record>
+        <record id="menu_FAQs" model="website.menu">
+            <field name="name">FAQs</field>
+            <field name="url">/FAQs</field>
+            <field name="parent_id" ref="website.main_menu"/>
+        </record>
+        <record id="menu_feedback" model="website.menu">
+            <field name="name">Feedback</field>
+            <field name="url">/feedback</field>
+            <field name="parent_id" ref="website.main_menu"/>
+        </record>
+        <record id="menu_scan" model="website.menu">
+            <field name="name">Scan</field>
+            <field name="url">/scan</field>
+            <field name="parent_id" ref="website.main_menu"/>
+        </record>
+    </data>
+</odoo>
